@@ -9,23 +9,23 @@
 /* Begin PBXBuildFile section */
 		4F7B914A26E1ACF200862139 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7B914926E1ACF200862139 /* AppDelegate.swift */; };
 		4F7B914C26E1ACF200862139 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4F7B914B26E1ACF200862139 /* GameScene.sks */; };
-		4F7B914E26E1ACF200862139 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4F7B914D26E1ACF200862139 /* Actions.sks */; };
 		4F7B915026E1ACF200862139 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7B914F26E1ACF200862139 /* GameScene.swift */; };
 		4F7B915226E1ACF200862139 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7B915126E1ACF200862139 /* GameViewController.swift */; };
 		4F7B915526E1ACF200862139 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4F7B915326E1ACF200862139 /* Main.storyboard */; };
 		4F7B915726E1ACF700862139 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F7B915626E1ACF700862139 /* Assets.xcassets */; };
+		4F7B915F26E1F6EB00862139 /* FireParticles.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4F7B915E26E1F6EB00862139 /* FireParticles.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4F7B914626E1ACF200862139 /* Project11Pachinko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project11Pachinko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F7B914926E1ACF200862139 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4F7B914B26E1ACF200862139 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
-		4F7B914D26E1ACF200862139 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		4F7B914F26E1ACF200862139 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		4F7B915126E1ACF200862139 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		4F7B915426E1ACF200862139 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4F7B915626E1ACF700862139 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4F7B915826E1ACF700862139 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4F7B915E26E1F6EB00862139 /* FireParticles.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = FireParticles.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,12 +60,12 @@
 			children = (
 				4F7B914926E1ACF200862139 /* AppDelegate.swift */,
 				4F7B914B26E1ACF200862139 /* GameScene.sks */,
-				4F7B914D26E1ACF200862139 /* Actions.sks */,
 				4F7B914F26E1ACF200862139 /* GameScene.swift */,
 				4F7B915126E1ACF200862139 /* GameViewController.swift */,
 				4F7B915326E1ACF200862139 /* Main.storyboard */,
 				4F7B915626E1ACF700862139 /* Assets.xcassets */,
 				4F7B915826E1ACF700862139 /* Info.plist */,
+				4F7B915E26E1F6EB00862139 /* FireParticles.sks */,
 			);
 			path = Project11Pachinko;
 			sourceTree = "<group>";
@@ -128,9 +128,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F7B915526E1ACF200862139 /* Main.storyboard in Resources */,
+				4F7B915F26E1F6EB00862139 /* FireParticles.sks in Resources */,
 				4F7B914C26E1ACF200862139 /* GameScene.sks in Resources */,
 				4F7B915726E1ACF700862139 /* Assets.xcassets in Resources */,
-				4F7B914E26E1ACF200862139 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,7 +292,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.krauserhuang.Project11Pachinko;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Debug;
 		};
@@ -311,7 +311,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.krauserhuang.Project11Pachinko;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 			};
 			name = Release;
 		};
