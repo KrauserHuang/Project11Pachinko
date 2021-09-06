@@ -7,28 +7,24 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
-    
+class GameScene: SKScene, SKPhysicsContactDelegate {
+    // ball image file names
     var balls = ["ballBlue", "ballCyan", "ballGreen", "ballGrey", "ballPurple", "ballRed", "ballYellow"]
-    
+    // for tracking score
     var scoreLabel: SKLabelNode!
     var score = 0 {
         didSet {
             scoreLabel.text = "Score: \(score)"
         }
     }
-    
+    // for tracking in editing mode or not
     var editLabel: SKLabelNode!
     var editingMode: Bool = false {
         didSet {
-            if editingMode {
-                editLabel.text = "Done"
-            } else {
-                editLabel.text = "Edit"
-            }
+            editLabel.text = editingMode ? "Done" : "Edit"
         }
     }
-    
+    // ball count
     var lifeLabel: SKLabelNode!
     var life = 5 {
         didSet {
@@ -37,7 +33,7 @@ class GameScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
-        // 增加實體在整個畫面上，就像一個框將所有東西包起來
+        // 增加實體在整個畫面上，就像一個框將所有東西包起來，這裡是讓球不會彈出畫面外
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         physicsWorld.contactDelegate = self
         // SKSpriteNode等於UIKit的UIImage，可載入圖片
@@ -51,46 +47,49 @@ class GameScene: SKScene {
         // like addSubView
         addChild(background)
         
+        // style the score label
         scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
         scoreLabel.text = "Score: 0"
         scoreLabel.horizontalAlignmentMode = .right
         scoreLabel.position = CGPoint(x: 980, y: 700)
         addChild(scoreLabel)
-        
+        // style edit label
         editLabel = SKLabelNode(fontNamed: "Chalkduster")
         editLabel.text = "Edit"
         editLabel.position = CGPoint(x: 80, y: 700)
         addChild(editLabel)
-        
+        // style life label
         lifeLabel = SKLabelNode(fontNamed: "Chalkduster")
         lifeLabel.text = "Life: 5"
         lifeLabel.horizontalAlignmentMode = .center
         lifeLabel.position = CGPoint(x: 450, y: 700)
         addChild(lifeLabel)
         
-        makeSlot(at: CGPoint(x: 128, y: 0), isGood: true)
-        makeSlot(at: CGPoint(x: 384, y: 0), isGood: false)
-        makeSlot(at: CGPoint(x: 640, y: 0), isGood: true)
-        makeSlot(at: CGPoint(x: 896, y: 0), isGood: false)
-        
-        makeBouncer(at: CGPoint(x: 0, y: 0))
-        makeBouncer(at: CGPoint(x: 256, y: 0))
-        makeBouncer(at: CGPoint(x: 512, y: 0))
-        makeBouncer(at: CGPoint(x: 768, y: 0))
-        makeBouncer(at: CGPoint(x: 1024, y: 0))
+        var isGoodSwitch = true
+        for x in [128, 384, 640, 896] {
+            makeSlot(at: CGPoint(x: x, y: 0), isGood: isGoodSwitch)
+            isGoodSwitch.toggle()
+        }
+        for x in [0, 256, 512, 768, 1024] {
+            makeBouncer(at: CGPoint(x: x, y: 0))
+        }
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // 只記錄第一下點擊的數據
+        // 只記錄第一下點擊的數據(or should said clear multitouch scenario)
         guard let touch = touches.first else { return }
         // 回傳點選位置的座標
         let location = touch.location(in: self)
-        
+        // create node at the touch location
         let object = nodes(at: location)
+        // if the node appear to be on the edit label
         if object.contains(editLabel) {
+            // acting like button behavior(show whether it's being edit or done)
             editingMode.toggle()
         } else {
             if editingMode {
+                // create a box
+                guard location.y < 600, location.y > 200 else { return }
                 let size = CGSize(width: Int.random(in: 16...128), height: 16)
                 let box = SKSpriteNode(color: UIColor(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1), alpha: 1), size: size)
                 box.name = "box"
@@ -100,6 +99,8 @@ class GameScene: SKScene {
                 box.position = location
                 addChild(box)
             } else {
+                // create a ball, you can only put above 650 y axis, if life is less than 0, you can't create another ball
+                guard location.y > 650 else { return }
                 guard life > 0 else { return }
                 life -= 1
                 let ball = SKSpriteNode(imageNamed: balls.randomElement()!)
@@ -109,9 +110,10 @@ class GameScene: SKScene {
                 ball.physicsBody?.contactTestBitMask = ball.physicsBody!.collisionBitMask
                 // 設定彈跳係數
                 ball.physicsBody?.restitution = 0.4
-                ball.position.x = location.x
-                ball.position.y = (view?.frame.height)!
-//                ball.position = location
+                // 設定不管從畫面哪裡點擊，球的y軸都會從最上放產生
+                // ball.position.x = location.x
+                // ball.position.y = (view?.frame.height)!
+                ball.position = location
                 addChild(ball)
             }
         }
@@ -153,9 +155,17 @@ class GameScene: SKScene {
         let spinForever = SKAction.repeatForever(spin)
         slotGlow.run(spinForever)
     }
-}
-//MARK: - 建立實體物體碰撞代理
-extension GameScene: SKPhysicsContactDelegate {
+    //MARK: - Call SKPhysicsContact function
+    func didBegin(_ contact: SKPhysicsContact) {
+        guard let nodeA = contact.bodyA.node else { return }
+        guard let nodeB = contact.bodyB.node else { return }
+        
+        if nodeA.name == "ball" {
+            collisionBetween(ball: nodeA, object: nodeB)
+        } else if nodeB.name == "ball" {
+            collisionBetween(ball: nodeB, object: nodeA)
+        }
+    }
     // 當球與其他物體碰撞，主要拿來偵測他是碰撞到good/bad slotBase
     func collisionBetween(ball: SKNode, object: SKNode) {
         if object.name == "good" {
@@ -166,6 +176,7 @@ extension GameScene: SKPhysicsContactDelegate {
             destroy(ball: ball)
             score -= 1
         } else if object.name == "box" {
+            // if you hit a box, you get score and the box will be removed
             score += 1
             object.removeFromParent()
         }
@@ -177,16 +188,5 @@ extension GameScene: SKPhysicsContactDelegate {
             addChild(fireParticles)
         }
         ball.removeFromParent()
-    }
-    
-    func didBegin(_ contact: SKPhysicsContact) {
-        guard let nodeA = contact.bodyA.node else { return }
-        guard let nodeB = contact.bodyB.node else { return }
-        
-        if nodeA.name == "ball" {
-            collisionBetween(ball: nodeA, object: nodeB)
-        } else if nodeB.name == "ball" {
-            collisionBetween(ball: nodeB, object: nodeA)
-        }
     }
 }
